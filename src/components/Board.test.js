@@ -32,11 +32,11 @@ describe('사용자는 대시보드에서 테이블을 보고 페이지를 이�
   });
 
   it('사용자는 이전 페이지를 누를 수 있다.', () => {
-    const button = getByRole('button', { name: '이전' });
+    const button = getByText(container, '<');
     expect(button).toBeInTheDocument();
   });
   it('사용자는 다음 페이지를 누를 수 있다.', () => {
-    const button = getByRole('button', { name: '다음' });
+    const button = getByText(container, '>');
     expect(button).toBeInTheDocument();
   });
 });

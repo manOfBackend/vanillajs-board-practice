@@ -20,6 +20,7 @@
   "homepage": "https://gitlab.com/buzzvil-assignments/haena910_naver.com_#readme",
   "devDependencies": {
     "@babel/core": "^7.17.0",
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
     "@testing-library/dom": "^8.11.3",
     "@testing-library/jest-dom": "^5.16.2",
