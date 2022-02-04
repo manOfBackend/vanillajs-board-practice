@@ -4,7 +4,7 @@
   "description": "ECHO�� �����Ǿ� �ֽ��ϴ�.",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch",
     "start": "webpack serve --mode=development",
     "build": "webpack -w"
   },
@@ -21,6 +21,8 @@
   "devDependencies": {
     "@babel/core": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
+    "@testing-library/dom": "^8.11.3",
+    "@testing-library/jest-dom": "^5.16.2",
     "babel-loader": "^8.2.3",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.6.0",
@@ -31,6 +33,7 @@
     "html-webpack-plugin": "^5.5.0",
     "jest": "^27.4.7",
     "prettier": "2.5.1",
+    "regenerator-runtime": "^0.13.9",
     "style-loader": "^3.3.1",
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2",
