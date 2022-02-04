@@ -27,6 +27,14 @@ class App extends Component {
             path: '/',
             Component: DashboardPage,
           },
+          {
+            path: '/dashboard',
+            Component: DashboardPage,
+          },
+          {
+            path: '/pages/:pageNum',
+            Component: DashboardPage,
+          },
         ],
       },
       this.container
