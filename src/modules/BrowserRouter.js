@@ -1,5 +1,22 @@
 import { Component, renderComponent } from './MyReact.js';
 
+class DefaultNotFoundComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.container = document.createElement('div');
+  }
+  render() {
+    this.container.innerHTML = '';
+
+    const message = document.createElement('h3');
+    message.innerText =
+      '페이지를 찾을 수 없어요. 주소를 정확히 입력했는지 확인 해주세요.';
+    this.container.appendChild(message);
+
+    return this.container;
+  }
+}
+
 class BrowserRouter extends Component {
   constructor(props) {
     super(props);
@@ -20,7 +37,7 @@ class BrowserRouter extends Component {
     for (let i = 0; i < routePaths.length; i++) {
       const routePathTokens = routePaths[i].split('/').filter((p) => !!p);
 
-      console.log('routePathTokens', routePathTokens);
+      console.log('routePathTokens', routePathTokens, currentPathTokens);
       let isMatch = true;
       let tempParams = {};
       if (routePathTokens.length !== currentPathTokens.length) {
@@ -28,15 +45,20 @@ class BrowserRouter extends Component {
         continue;
       }
 
-      currentPathTokens.forEach((token, idx) => {
-        if (routePathTokens[idx] !== token) {
+      for (let j = 0; j < currentPathTokens.length; j++) {
+        const token = currentPathTokens[j];
+        if (
+          !routePathTokens[j].startsWith(':') &&
+          routePathTokens[j] !== token
+        ) {
           isMatch = false;
+          break;
         }
-        if (routePathTokens[idx].startsWith(':')) {
-          tempParams[routePathTokens[idx].slice(1)] = token;
+        if (routePathTokens[j].startsWith(':')) {
+          tempParams[routePathTokens[j].slice(1)] = token;
           isMatch = true;
         }
-      });
+      }
 
       if (isMatch) {
         pathKey = routePaths[i];
@@ -59,7 +81,7 @@ class BrowserRouter extends Component {
     const targetRoute = routes.find((route) => route.path === pathKey);
 
     const route = targetRoute ?? { Component: DefaultNotFoundComponent };
-
+    console.log('target', targetRoute, params);
     const { Component, props } = route;
 
     renderComponent(
