@@ -23,3 +23,6 @@
 ### `npm test`: testing
 ### `/dashboard`: 대시보드
 ### `/pages/:pageNum`: 대시보드 페이지
+---
+## 실행 화면
+![image](/uploads/40967742f35963b3005e114fb39db980/image.png)
