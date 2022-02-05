@@ -15,3 +15,11 @@
     - App.js
     - App.css
     - index.js
+
+---
+## 실행 방법
+### `npm i`
+### `npm start`: development mode
+### `npm test`: testing
+### `/dashboard`: 대시보드
+### `/pages/:pageNum`: 대시보드 페이지
