@@ -14,7 +14,6 @@ class App extends Component {
     window.addEventListener('popstate', this.handlePopState);
   }
   push = (path) => {
-    if (path === this.state.path) return;
     history.pushState({ path }, '', path);
   };
 
