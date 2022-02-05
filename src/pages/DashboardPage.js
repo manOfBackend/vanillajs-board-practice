@@ -86,8 +86,9 @@ class DashboardPage extends Component {
 
   handlePageClick = (e) => {
     const { pageNum } = e.target.dataset;
-
+    const { history } = this.props;
     if (pageNum) {
+      history.push(`/pages/${pageNum}`);
       this.setState({
         pageNum: Number(pageNum),
       });
@@ -95,7 +96,7 @@ class DashboardPage extends Component {
   };
   render() {
     this.container.innerHTML = '';
-    const { history, match } = this.props;
+    const { history } = this.props;
     const { contents, order, pageNum } = this.state;
 
     if (contents.loading) {

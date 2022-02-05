@@ -16,7 +16,6 @@ class App extends Component {
   push = (path) => {
     if (path === this.state.path) return;
     history.pushState({ path }, '', path);
-    this.setState({ path });
   };
 
   goBack = () => {
