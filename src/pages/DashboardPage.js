@@ -9,8 +9,14 @@ class DashboardPage extends Component {
 
     this.container = document.createElement('div');
     this.container.className = 'DashboardPage';
+    const { match } = props;
     this.state = {
       contents: asyncInitState,
+      order: {
+        headerId: '',
+        orderType: 1,
+      },
+      pageNum: match.params.pageNum ? Number(match.params.pageNum) : 1,
     };
     this.initState();
   }
@@ -28,19 +34,76 @@ class DashboardPage extends Component {
       asyncHandler.setError.call(this, 'contents', data);
     }
   };
+  changeOrder = (headerId, orderType) => {
+    const {
+      contents: { data },
+    } = this.state;
 
+    const compareData = (f, b) => {
+      if (headerId === 'id') {
+        if (orderType === 1) {
+          return f.id - b.id;
+        } else {
+          return b.id - f.id;
+        }
+      } else if (headerId === 'created') {
+        const fDate = new Date(f.created_at),
+          bDate = new Date(b.created_at);
+        if (orderType === 1) {
+          return fDate - bDate;
+        } else {
+          return bDate - fDate;
+        }
+      }
+    };
+
+    if (data) {
+      const ordered = [...data].sort(compareData);
+      console.log('change order', orderType, ordered);
+      this.setState({
+        contents: {
+          ...this.state.contents,
+          data: ordered,
+        },
+        order: {
+          headerId,
+          orderType,
+        },
+      });
+    }
+  };
+
+  handleHeaderClick = (e) => {
+    const headerId = e.target.dataset.id;
+
+    if (headerId === 'id' || headerId === 'created') {
+      const {
+        order: { orderType },
+      } = this.state;
+      this.changeOrder(headerId, orderType * -1);
+    }
+  };
+
+  handlePageClick = (e) => {
+    const { pageNum } = e.target.dataset;
+
+    if (pageNum) {
+      this.setState({
+        pageNum: Number(pageNum),
+      });
+    }
+  };
   render() {
     this.container.innerHTML = '';
     const { history, match } = this.props;
-    const { contents } = this.state;
-    const pageNum = match.params.pageNum ? Number(match.params.pageNum) : 1;
+    const { contents, order, pageNum } = this.state;
 
     if (contents.loading) {
       // render loading component
     }
 
     if (contents.isError) {
-      // return error component
+      // render error component
     }
 
     if (contents.data) {
@@ -53,13 +116,14 @@ class DashboardPage extends Component {
           contents: contents.data.slice(start, start + 10),
           maxPageNum,
           history,
-          pageNum: pageNum,
+          order,
+          pageNum,
+          onHeaderClick: this.handleHeaderClick,
           onPageClick: this.handlePageClick,
         },
         this.container
       );
     }
-    // this.addEvents();
     return this.container;
   }
 }

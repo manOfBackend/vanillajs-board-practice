@@ -37,7 +37,6 @@ class BrowserRouter extends Component {
     for (let i = 0; i < routePaths.length; i++) {
       const routePathTokens = routePaths[i].split('/').filter((p) => !!p);
 
-      console.log('routePathTokens', routePathTokens, currentPathTokens);
       let isMatch = true;
       let tempParams = {};
       if (routePathTokens.length !== currentPathTokens.length) {
@@ -81,7 +80,6 @@ class BrowserRouter extends Component {
     const targetRoute = routes.find((route) => route.path === pathKey);
 
     const route = targetRoute ?? { Component: DefaultNotFoundComponent };
-    console.log('target', targetRoute, params);
     const { Component, props } = route;
 
     renderComponent(

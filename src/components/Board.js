@@ -6,19 +6,26 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.container = document.createDocumentFragment();
-
-    this.headers = ['ID', '내용', '카테고리', '생성날짜', '추천'];
   }
 
   // 컨텐츠 테이블 생성
-  makeTable(data) {
+  makeTable(data, headers, order) {
     const table = document.createElement('table');
+    table.className = 'dashboard-table-container';
     const thead = document.createElement('thead');
     const theadTr = document.createElement('tr');
 
-    for (const header of this.headers) {
+    for (const [id, content] of Object.entries(headers)) {
       const th = document.createElement('th');
-      th.innerText = header;
+      th.innerText = content.title;
+      th.dataset.id = id;
+      if ('order' in content) {
+        const { headerId } = content.order;
+        th.className = 'orderable';
+        if (id === order.headerId) {
+          th.classList.add('ordered');
+        }
+      }
       theadTr.appendChild(th);
     }
     thead.appendChild(theadTr);
@@ -56,38 +63,36 @@ class Board extends Component {
   makeNavigation(pageNum, maxPageNum) {
     const navigation = document.createElement('div');
     navigation.className = 'navigation-container';
+    const makePageLink = (pageNum, innerText) => {
+      const link = document.createElement('a');
+      // link.href = `/pages/${pageNum}`;
+      link.dataset.pageNum = pageNum;
+      link.innerText = innerText;
+      return link;
+    };
 
+    // |<, < 아이콘 출력
     if (pageNum > 1) {
-      const prevprev = document.createElement('a');
-      prevprev.href = `/pages/1`;
-      prevprev.innerText = '|<';
-
-      const prev = document.createElement('a');
-      prev.href = `/pages/${pageNum - 1}`;
-      prev.innerText = '<';
-
+      const prevprev = makePageLink(1, '|<');
+      const prev = makePageLink(pageNum - 1, '<');
       navigation.appendChild(prevprev);
       navigation.appendChild(prev);
     }
 
+    // 최대 10개 페이지 출력
     const offset = Math.floor(pageNum / 11) * 10 + 1;
     for (let p = offset; p < offset + 10 && p <= maxPageNum; p++) {
-      const ahref = document.createElement('a');
-      ahref.href = `/pages/${p}`;
-      ahref.innerText = p;
+      const ahref = makePageLink(p, p);
       if (p === pageNum) {
         ahref.classList.add('on');
       }
       navigation.appendChild(ahref);
     }
 
+    // >, >\ 아이콘 출력
     if (pageNum < maxPageNum) {
-      const next = document.createElement('a');
-      next.href = `/pages/${pageNum + 1}`;
-      next.innerText = '>';
-      const nextnext = document.createElement('a');
-      nextnext.href = `/pages/${maxPageNum}`;
-      nextnext.innerText = '>|';
+      const next = makePageLink(pageNum + 1, '>');
+      const nextnext = makePageLink(maxPageNum, '>|');
 
       navigation.appendChild(next);
       navigation.appendChild(nextnext);
@@ -95,18 +100,50 @@ class Board extends Component {
     return navigation;
   }
 
+  addEvents(onHeaderClick, onPageClick) {
+    const thead = this.container.querySelector(
+      '.dashboard-table-container > thead'
+    );
+    thead.addEventListener('click', onHeaderClick);
+
+    const navigation = this.container.querySelector('.navigation-container');
+    navigation.addEventListener('click', onPageClick);
+  }
+
   render() {
     this.container.innerHTML = '';
 
-    const { contents, pageNum, maxPageNum } = this.props;
-
+    const { contents, pageNum, maxPageNum, onHeaderClick, onPageClick, order } =
+      this.props;
+    console.log(order);
     if (!contents) return this.container;
+    const headers = {
+      id: {
+        title: `ID${
+          order.headerId === 'id' && order.orderType === 1 ? '▲' : '▼'
+        }`,
+        order: order.headerId === 'id' ? order.orderType : 1,
+      },
+      content: {
+        title: '내용',
+      },
+      category: { title: '카테고리' },
+      created: {
+        title: `생성날짜${
+          order.headerId === 'created' && order.orderType === 1 ? '▲' : '▼'
+        }`,
+        order: order.headerId === 'created' ? order.orderType : 1,
+      },
+      recommend: {
+        title: '추천',
+      },
+    };
 
-    const table = this.makeTable(contents);
+    const table = this.makeTable(contents, headers, order);
     const navigation = this.makeNavigation(pageNum, maxPageNum);
     this.container.appendChild(table);
     this.container.appendChild(navigation);
-
+    this.addEvents(onHeaderClick, onPageClick);
     return this.container;
   }
 }
