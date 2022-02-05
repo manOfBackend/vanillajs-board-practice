@@ -2,6 +2,10 @@ import { Component, renderComponent } from '../modules/MyReact.js';
 import Board from '../components/Board.js';
 import { asyncInitState, asyncHandler } from '../modules/asyncHandler.js';
 import { fetchPages } from '../services/pages.js';
+import {
+  getLocalStorageItem,
+  setLocalStorageItem,
+} from '../utils/localStorage.js';
 
 class DashboardPage extends Component {
   constructor(props) {
@@ -10,6 +14,8 @@ class DashboardPage extends Component {
     this.container = document.createElement('div');
     this.container.className = 'DashboardPage';
     const { match } = props;
+    const recommendInfo = getLocalStorageItem('recommendInfo');
+
     this.state = {
       contents: asyncInitState,
       order: {
@@ -17,6 +23,7 @@ class DashboardPage extends Component {
         orderType: 1,
       },
       pageNum: match.params.pageNum ? Number(match.params.pageNum) : 1,
+      recommendInfo,
     };
     this.initState();
   }
@@ -59,7 +66,6 @@ class DashboardPage extends Component {
 
     if (data) {
       const ordered = [...data].sort(compareData);
-      console.log('change order', orderType, ordered);
       this.setState({
         contents: {
           ...this.state.contents,
@@ -94,10 +100,33 @@ class DashboardPage extends Component {
       });
     }
   };
+
+  handleContentClick = (e) => {
+    const { id } = e.target.closest('tr').dataset;
+    const {
+      contents: { data },
+      recommendInfo,
+    } = this.state;
+    if (id) {
+      const _recommendInfo = {
+        ...recommendInfo,
+        [id]: {
+          recommend:
+            recommendInfo && recommendInfo[id]
+              ? Number(recommendInfo[id].recommend) + 1
+              : 1,
+        },
+      };
+      setLocalStorageItem('recommendInfo', _recommendInfo);
+      this.setState({
+        recommendInfo: _recommendInfo,
+      });
+    }
+  };
   render() {
     this.container.innerHTML = '';
     const { history } = this.props;
-    const { contents, order, pageNum } = this.state;
+    const { contents, order, pageNum, recommendInfo } = this.state;
 
     if (contents.loading) {
       // render loading component
@@ -111,16 +140,24 @@ class DashboardPage extends Component {
       const contentsCount = contents.data.length;
       const maxPageNum = Math.ceil(contentsCount / 10);
       const start = (pageNum - 1) * 10;
+      const mergedData = contents.data.map((d) => ({
+        ...d,
+        recommend:
+          recommendInfo && recommendInfo[d.id]
+            ? recommendInfo[d.id].recommend
+            : 0,
+      }));
       renderComponent(
         Board,
         {
-          contents: contents.data.slice(start, start + 10),
+          contents: mergedData.slice(start, start + 10),
           maxPageNum,
           history,
           order,
           pageNum,
           onHeaderClick: this.handleHeaderClick,
           onPageClick: this.handlePageClick,
+          onContentClick: this.handleContentClick,
         },
         this.container
       );

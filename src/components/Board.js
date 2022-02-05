@@ -35,6 +35,7 @@ class Board extends Component {
     for (const c of Array.from(data)) {
       const { category, content, id, created_at } = c;
       const tr = document.createElement('tr');
+      tr.dataset.id = id;
       const tdId = document.createElement('td');
       tdId.innerText = id;
       const tdCategory = document.createElement('td');
@@ -44,7 +45,7 @@ class Board extends Component {
       const tdCreated = document.createElement('td');
       tdCreated.innerText = convertDate(created_at);
       const tdLike = document.createElement('td');
-      tdLike.innerText = '0';
+      tdLike.innerText = c.recommend;
 
       tr.appendChild(tdId);
       tr.appendChild(tdContent);
@@ -100,7 +101,7 @@ class Board extends Component {
     return navigation;
   }
 
-  addEvents(onHeaderClick, onPageClick) {
+  addEvents(onHeaderClick, onPageClick, onContentClick) {
     const thead = this.container.querySelector(
       '.dashboard-table-container > thead'
     );
@@ -108,14 +109,26 @@ class Board extends Component {
 
     const navigation = this.container.querySelector('.navigation-container');
     navigation.addEventListener('click', onPageClick);
+
+    const tbody = this.container.querySelector(
+      '.dashboard-table-container > tbody'
+    );
+    tbody.addEventListener('click', onContentClick, { capture: true });
   }
 
   render() {
     this.container.innerHTML = '';
 
-    const { contents, pageNum, maxPageNum, onHeaderClick, onPageClick, order } =
-      this.props;
-    console.log(order);
+    const {
+      contents,
+      pageNum,
+      maxPageNum,
+      onHeaderClick,
+      onPageClick,
+      order,
+      onContentClick,
+    } = this.props;
+
     if (!contents) return this.container;
     const headers = {
       id: {
@@ -143,7 +156,7 @@ class Board extends Component {
     const navigation = this.makeNavigation(pageNum, maxPageNum);
     this.container.appendChild(table);
     this.container.appendChild(navigation);
-    this.addEvents(onHeaderClick, onPageClick);
+    this.addEvents(onHeaderClick, onPageClick, onContentClick);
     return this.container;
   }
 }

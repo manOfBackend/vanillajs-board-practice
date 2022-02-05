@@ -12,6 +12,7 @@ table {
 table tr {
   border: 1px solid #ddd;
   padding: 5px;
+  cursor: pointer;
 }
 table th,
 table td {
