@@ -101,12 +101,10 @@ class DashboardPage extends Component {
     }
   };
 
+  // 추천 기능
   handleContentClick = (e) => {
     const { id } = e.target.closest('tr').dataset;
-    const {
-      contents: { data },
-      recommendInfo,
-    } = this.state;
+    const { recommendInfo } = this.state;
     if (id) {
       const _recommendInfo = {
         ...recommendInfo,

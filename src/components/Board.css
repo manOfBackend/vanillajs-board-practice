@@ -30,7 +30,18 @@ table .orderable {
   cursor: pointer;
 }
 table .ordered {
-  color: #33c4ff;
+  color: #34568b;
+}
+
+table td .hot {
+  border: solid 0.11rem;
+  margin-left: 0.3rem;
+  padding-left: 0.2rem;
+  padding-right: 0.2rem;
+  background-color: #fff;
+  color: #dd4124;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 .navigation-container {
@@ -62,5 +73,5 @@ table .ordered {
 .navigation-container a.on {
   border: solid 1px;
   background-color: #fff;
-  color: #33c4ff;
+  color: #7fcdcd;
 }

@@ -42,6 +42,12 @@ class Board extends Component {
       tdCategory.innerText = category;
       const tdContent = document.createElement('td');
       tdContent.innerText = content;
+      if (c.recommend >= 10) {
+        const hot = document.createElement('span');
+        hot.className = 'hot';
+        hot.innerText = 'HOT';
+        tdContent.appendChild(hot);
+      }
       const tdCreated = document.createElement('td');
       tdCreated.innerText = convertDate(created_at);
       const tdLike = document.createElement('td');
