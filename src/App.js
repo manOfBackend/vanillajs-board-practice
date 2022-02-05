@@ -11,7 +11,23 @@ class App extends Component {
     };
 
     this.container = document.querySelector('.App');
+    window.addEventListener('popstate', this.handlePopState);
   }
+  push = (path) => {
+    if (path === this.state.path) return;
+    history.pushState({ path }, '', path);
+    this.setState({ path });
+  };
+
+  goBack = () => {
+    history.back();
+  };
+
+  handlePopState = (e) => {
+    this.setState({
+      path: location.pathname,
+    });
+  };
 
   render() {
     this.container.innerHTML = '';
@@ -22,6 +38,10 @@ class App extends Component {
       BrowserRouter,
       {
         path,
+        history: {
+          push: this.push,
+          goBack: this.goBack,
+        },
         routes: [
           {
             path: '/',
