@@ -38,7 +38,7 @@ table .ordered {
 table td .hot {
   display: inline-block;
   border: solid 0.11rem;
-  margin-left: 0.3rem;
+  margin-left: 0.5rem;
   padding-left: 0.2rem;
   padding-right: 0.2rem;
   background-color: #fff;
@@ -46,6 +46,8 @@ table td .hot {
   font-size: 0.8rem;
   font-weight: 700;
   user-select: none;
+  vertical-align: middle;
+  margin-bottom: 0.7rem;
 }
 
 table td .content {
