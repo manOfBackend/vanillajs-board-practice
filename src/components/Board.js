@@ -12,6 +12,9 @@ class Board extends Component {
   makeTable(data, headers, order) {
     const table = document.createElement('table');
     table.className = 'dashboard-table-container';
+
+    const colgroup = document.createElement('colgroup');
+
     const thead = document.createElement('thead');
     const theadTr = document.createElement('tr');
 
@@ -27,6 +30,10 @@ class Board extends Component {
         }
       }
       theadTr.appendChild(th);
+
+      const col = document.createElement('col');
+      col.setAttribute('width', content.width);
+      colgroup.appendChild(col);
     }
     thead.appendChild(theadTr);
 
@@ -41,9 +48,12 @@ class Board extends Component {
       const tdCategory = document.createElement('td');
       tdCategory.innerText = category;
       const tdContent = document.createElement('td');
-      tdContent.innerText = content;
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'content';
+      contentDiv.innerText = content;
+      tdContent.appendChild(contentDiv);
       if (c.recommend >= 10) {
-        const hot = document.createElement('span');
+        const hot = document.createElement('div');
         hot.className = 'hot';
         hot.innerText = 'HOT';
         tdContent.appendChild(hot);
@@ -61,6 +71,7 @@ class Board extends Component {
       tbody.appendChild(tr);
     }
 
+    table.appendChild(colgroup);
     table.appendChild(thead);
     table.appendChild(tbody);
     return table;
@@ -142,19 +153,23 @@ class Board extends Component {
           order.headerId === 'id' && order.orderType === 1 ? '▲' : '▼'
         }`,
         order: order.headerId === 'id' ? order.orderType : 1,
+        width: '10%',
       },
       content: {
         title: '내용',
+        width: '65%',
       },
-      category: { title: '카테고리' },
+      category: { title: '카테고리', width: '15%' },
       created: {
         title: `생성날짜${
           order.headerId === 'created' && order.orderType === 1 ? '▲' : '▼'
         }`,
         order: order.headerId === 'created' ? order.orderType : 1,
+        width: '20%',
       },
       recommend: {
         title: '추천',
+        width: '5%',
       },
     };
 
