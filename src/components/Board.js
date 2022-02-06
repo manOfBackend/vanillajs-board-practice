@@ -81,21 +81,22 @@ class Board extends Component {
   makeNavigation(pageNum, maxPageNum) {
     const navigation = document.createElement('div');
     navigation.className = 'navigation-container';
-    const makePageLink = (pageNum, innerText) => {
+    const makePageLink = (pageNum, innerText, hidden) => {
       const link = document.createElement('a');
       // link.href = `/pages/${pageNum}`;
       link.dataset.pageNum = pageNum;
       link.innerText = innerText;
+      if (hidden) {
+        link.classList.add('disable');
+      }
       return link;
     };
 
     // |<, < 아이콘 출력
-    if (pageNum > 1) {
-      const prevprev = makePageLink(1, '|<');
-      const prev = makePageLink(pageNum - 1, '<');
-      navigation.appendChild(prevprev);
-      navigation.appendChild(prev);
-    }
+    const prevprev = makePageLink(1, '|<', pageNum <= 1);
+    const prev = makePageLink(pageNum - 1, '<', pageNum <= 1);
+    navigation.appendChild(prevprev);
+    navigation.appendChild(prev);
 
     // 최대 10개 페이지 출력
     const offset = Math.floor(pageNum / 11) * 10 + 1;
@@ -108,13 +109,12 @@ class Board extends Component {
     }
 
     // >, >\ 아이콘 출력
-    if (pageNum < maxPageNum) {
-      const next = makePageLink(pageNum + 1, '>');
-      const nextnext = makePageLink(maxPageNum, '>|');
+    const next = makePageLink(pageNum + 1, '>', pageNum >= maxPageNum);
+    const nextnext = makePageLink(maxPageNum, '>|', pageNum >= maxPageNum);
 
-      navigation.appendChild(next);
-      navigation.appendChild(nextnext);
-    }
+    navigation.appendChild(next);
+    navigation.appendChild(nextnext);
+
     return navigation;
   }
 
