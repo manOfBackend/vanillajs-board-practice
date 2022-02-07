@@ -1,11 +1,12 @@
 import { Component, renderComponent } from '../modules/MyReact.js';
-import Board from '../components/Board.js';
+import Board from '../components/Board/Board.js';
 import { asyncInitState, asyncHandler } from '../modules/asyncHandler.js';
 import { fetchPages } from '../services/pages.js';
 import {
   getLocalStorageItem,
   setLocalStorageItem,
 } from '../utils/localStorage.js';
+import Pagination from '../components/pagination/pagination.js';
 
 class DashboardPage extends Component {
   constructor(props) {
@@ -145,6 +146,7 @@ class DashboardPage extends Component {
             ? recommendInfo[d.id].recommend
             : 0,
       }));
+      // 게시판 출력
       renderComponent(
         Board,
         {
@@ -156,6 +158,16 @@ class DashboardPage extends Component {
           onHeaderClick: this.handleHeaderClick,
           onPageClick: this.handlePageClick,
           onContentClick: this.handleContentClick,
+        },
+        this.container
+      );
+      // 하단 페이지네이션 컴포넌트 출력
+      renderComponent(
+        Pagination,
+        {
+          maxPageNum,
+          pageNum,
+          onPageClick: this.handlePageClick,
         },
         this.container
       );

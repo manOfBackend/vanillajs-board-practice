@@ -26,13 +26,13 @@ describe('사용자는 대시보드에서 테이블을 보고 페이지를 이�
       document.removeChild(container);
     }
   });
-  it('사용자는 테이블에서 내용 항목을 볼 수 있다.', () => {
-    const content = getByText(container, /내용/);
-    expect(content).toBeInTheDocument();
-  });
 
   it('사용자는 이전 페이지를 누를 수 있다.', () => {
     const button = getByText(container, '<');
+    expect(button).toBeInTheDocument();
+  });
+  it('사용자는 1페이지를 누를 수 있다.', () => {
+    const button = getByText(container, '1');
     expect(button).toBeInTheDocument();
   });
   it('사용자는 다음 페이지를 누를 수 있다.', () => {

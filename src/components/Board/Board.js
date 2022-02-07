@@ -1,5 +1,5 @@
-import { Component } from '../modules/MyReact.js';
-import { convertDate } from '../utils/time.js';
+import { Component } from '../../modules/MyReact.js';
+import { convertDate } from '../../utils/time.js';
 import './Board.css';
 
 class Board extends Component {
@@ -77,55 +77,11 @@ class Board extends Component {
     return table;
   }
 
-  // 하단 페이지 네비게이션바 출력
-  makeNavigation(pageNum, maxPageNum) {
-    const navigation = document.createElement('div');
-    navigation.className = 'navigation-container';
-    const makePageLink = (pageNum, innerText, hidden) => {
-      const link = document.createElement('a');
-      // link.href = `/pages/${pageNum}`;
-      link.dataset.pageNum = pageNum;
-      link.innerText = innerText;
-      if (hidden) {
-        link.classList.add('disable');
-      }
-      return link;
-    };
-
-    // |<, < 아이콘 출력
-    const prevprev = makePageLink(1, '|<', pageNum <= 1);
-    const prev = makePageLink(pageNum - 1, '<', pageNum <= 1);
-    navigation.appendChild(prevprev);
-    navigation.appendChild(prev);
-
-    // 최대 10개 페이지 출력
-    const offset = Math.floor(pageNum / 11) * 10 + 1;
-    for (let p = offset; p < offset + 10 && p <= maxPageNum; p++) {
-      const ahref = makePageLink(p, p);
-      if (p === pageNum) {
-        ahref.classList.add('on');
-      }
-      navigation.appendChild(ahref);
-    }
-
-    // >, >\ 아이콘 출력
-    const next = makePageLink(pageNum + 1, '>', pageNum >= maxPageNum);
-    const nextnext = makePageLink(maxPageNum, '>|', pageNum >= maxPageNum);
-
-    navigation.appendChild(next);
-    navigation.appendChild(nextnext);
-
-    return navigation;
-  }
-
-  addEvents(onHeaderClick, onPageClick, onContentClick) {
+  addEvents(onHeaderClick, onContentClick) {
     const thead = this.container.querySelector(
       '.dashboard-table-container > thead'
     );
     thead.addEventListener('click', onHeaderClick);
-
-    const navigation = this.container.querySelector('.navigation-container');
-    navigation.addEventListener('click', onPageClick);
 
     const tbody = this.container.querySelector(
       '.dashboard-table-container > tbody'
@@ -136,15 +92,7 @@ class Board extends Component {
   render() {
     this.container.innerHTML = '';
 
-    const {
-      contents,
-      pageNum,
-      maxPageNum,
-      onHeaderClick,
-      onPageClick,
-      order,
-      onContentClick,
-    } = this.props;
+    const { contents, onHeaderClick, order, onContentClick } = this.props;
 
     if (!contents) return this.container;
     const headers = {
@@ -174,10 +122,8 @@ class Board extends Component {
     };
 
     const table = this.makeTable(contents, headers, order);
-    const navigation = this.makeNavigation(pageNum, maxPageNum);
     this.container.appendChild(table);
-    this.container.appendChild(navigation);
-    this.addEvents(onHeaderClick, onPageClick, onContentClick);
+    this.addEvents(onHeaderClick, onContentClick);
     return this.container;
   }
 }
